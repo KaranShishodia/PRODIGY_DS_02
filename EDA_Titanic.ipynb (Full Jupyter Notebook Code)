@@ -1,0 +1,62 @@
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+sns.set(style="whitegrid")
+plt.style.use("seaborn-v0_8")
+
+df = pd.read_csv("titanic.csv")  
+
+df.head()
+
+
+print("Missing Values:\n", df.isnull().sum())
+
+df['Age'].fillna(df['Age'].median(), inplace=True)
+df['Embarked'].fillna(df['Embarked'].mode()[0], inplace=True)
+
+if "Cabin" in df.columns:
+    df.drop(columns=['Cabin'], inplace=True)
+
+df.drop_duplicates(inplace=True)
+
+df.info()
+
+df.describe(include="all")
+
+plt.figure(figsize=(6,4))
+sns.countplot(x="Survived", data=df)
+plt.title("Survival Count")
+plt.show()
+
+plt.figure(figsize=(6,4))
+df["Age"].hist(bins=30, color="skyblue")
+plt.title("Age Distribution")
+plt.xlabel("Age")
+plt.show()
+
+plt.figure(figsize=(6,4))
+sns.barplot(x="Sex", y="Survived", data=df)
+plt.title("Survival Rate by Gender")
+plt.show()
+
+plt.figure(figsize=(6,4))
+sns.barplot(x="Pclass", y="Survived", data=df)
+plt.title("Survival Rate by Passenger Class")
+plt.show()
+
+plt.figure(figsize=(10,6))
+sns.heatmap(df.corr(), annot=True, cmap="coolwarm", linewidths=0.5)
+plt.title("Correlation Heatmap")
+plt.show()
+
+print(""" Key Insights:
+1. Women had a much higher chance of survival than men.
+2. First-class passengers had higher survival rates than third-class.
+3. Younger passengers were more likely to survive.
+4. Family size had an effect on survival chances.""")
+
+
+
+
